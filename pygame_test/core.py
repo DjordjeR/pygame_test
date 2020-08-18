@@ -1,44 +1,54 @@
-import pygame
 import sys
-from pygame.locals import *
+import pygame as pg
 
-# Initialize program
-pygame.init()
-
-# Assign FPS a value
-FPS = 30
-clock = pygame.time.Clock()
-
-# Setting up color objects
-BLUE = (0, 0, 255)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-
-# Setup a 300x300 pixel display with caption
-DISPLAYSURF = pygame.display.set_mode((300, 300))
-DISPLAYSURF.fill(WHITE)
-pygame.display.set_caption("Example")
-
-#                                       posX  posY size
-# pygame.draw.rect(DISPLAYSURF, BLACK, (100, 100, 80, 5))
+SCREEN_WIDTH = 480
+SCREEN_HEIGHT = 640
 
 
-head = pygame.surface.Surface((10, 10))
-# Beginning Game Loop
+class ScreenObject:
+    def __init__(self):
+        pass
+
+    def move(self):
+        pass
 
 
 def main():
-    while True:
-        clock.tick(FPS)
-        pygame.display.update()
-        DISPLAYSURF.blit(head, (head.x, head.y))
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
+    screen = pg.display.set_mode((SCREEN_HEIGHT, SCREEN_WIDTH))
+    clock = pg.time.Clock()
+    velocity = 10
+    rect = pg.Rect(300, 300, 20, 20)
+    done = False
+
+    while not done:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                done = True
+
+        keys = pg.key.get_pressed()
+        if keys[pg.K_a]:
+            # to move left
+            rect.x = max(0, rect.x - velocity)
+        if keys[pg.K_d]:
+            # to move right
+            size_x, _ = rect.size
+            rect.x = min(screen.get_width() - size_x, rect.x + velocity)
+        if keys[pg.K_w]:
+            # to move up
+            rect.y = max(0, rect.y - velocity)
+        if keys[pg.K_s]:
+            # to move down
+            _, size_y = rect.size
+            rect.y = min(screen.get_height() - size_y, rect.y + velocity)
+
+        screen.fill((40, 40, 40))
+        pg.draw.rect(screen, (150, 200, 20), rect)
+        pg.display.flip()
+        clock.tick(60)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+    pg.init()
     main()
+    pg.quit()
+    sys.exit()
